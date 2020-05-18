@@ -9,7 +9,9 @@ An app to mange happiness of the team unicorns !
 - PostgreSQL
 
 ## Install
+go in nextie-backend folder and run :
 Run bundle install
+then go in nextie-backend/nextie-frontend folder and run :
 yarn install
 
 run rails db:migrate
