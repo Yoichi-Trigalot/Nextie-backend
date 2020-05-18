@@ -9,6 +9,7 @@ Rails.application.routes.draw do
     get '/users', to: 'users#index'
     get '/demands', to: 'users#unicornDemands'
     get '/users/:id', to: 'users#show'
+    get '/currentuser', to: 'users#current'
 
     post 'refresh', controller: :refresh, action: :create
     post 'signin', controller: :signin, action: :create
