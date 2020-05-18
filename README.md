@@ -1,24 +1,38 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+# Nextie Unicorn App
+An app to mange happiness of the team unicorns !
 
-Things you may want to cover:
+## Dependencies
+- Ruby 2.6
+- @vue/cli
+- PostgreSQL
 
-* Ruby version
+## Install
+Run bundle install
+yarn install
 
-* System dependencies
+run rails db:migrate
+run rails db:seed
 
-* Configuration
+## Launch server
+run command rails s
+run command yarn dev 
 
-* Database creation
+and visit the app on url : http://localhost:8080
 
-* Database initialization
+__Login as:__
 
-* How to run the test suite
+to see the app as **admin**, manage unicorns, and attribute unicorn to collaborator : 
+email   = admin@gmail.com  
+passwor = secret
 
-* Services (job queues, cache servers, search engines, etc.)
+to see the app as **collab**, and ask for a unicorn, or change name of it :
 
-* Deployment instructions
+- To ask for a unicorn
+email    = stef@gmail.com
+password = secret
 
-* ...
+- To update the name of your unicorn
+email    = lea@gmail.com
+password = secret
