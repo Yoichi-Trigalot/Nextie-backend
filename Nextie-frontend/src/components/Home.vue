@@ -2,6 +2,25 @@
     <div class="div">
         <div class="w-50 mx-auto py-5">
             <div>
+              <h1>On demand Unicorns</h1>
+                <ul class="list-unstyled mt-4">
+                  <li class="py-4 border rounded mb-2 p-2" v-for="demand in demands" :key="demand" :demand="demand">
+                    <div class="d-flex align-items-center justify-content-between flex-wrap">
+                      <div class="flex-grow-1 d-flex justify-content-around align-items-center pr-4">
+                        <div class="w-100">
+                          <p class="m-0">User : <span class='font-weight-bolder'>{{ demand.email }}</span></p>
+                        </div>
+                        <div class="w-100">
+                          <button class="bg-transparent text-success tex-decoration-none font-weight-bold py-2 px-4 rounded border border-success"
+                          @click.prevent="addUnicorn(demand.id)">Create unicorn</button>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+
+            </div>
+            <div>
               <h1>List of unicorns </h1>
               <ul class="list-unstyled mt-4">
                 <li class="py-4 border rounded mb-2 p-2" v-for="unicorn in unicorns" :key="unicorn.id" :unicorn="unicorn">
@@ -42,7 +61,6 @@
                           <input class="form-control" v-model="unicorn.color" />
                         </div>
 
-
                         <input type="submit" value="Update" class="bg-transparent text-primary border border-primary text-decoration-none font-weight-bold py-2 px-4 mr-2 rounded">
                       </div>
                     </form>
@@ -61,6 +79,8 @@ export default {
     return {
       unicorns: [],
       users: [],
+      demands: [],
+      newUnicorn: [],
       error: '',
       editedUnicorn: ''
     }
@@ -76,6 +96,10 @@ export default {
       this.$http.secured.get('/users')
         .then(response => { this.users = response.data })
         .catch(error => this.setError(error, 'Something went wrong'))
+
+      this.$http.secured.get('/demands')
+        .then(response => { this.demands = response.data })
+        .catch(error => this.setError(error, 'Something went wrong'))
     }
   },
   methods: {
@@ -85,7 +109,6 @@ export default {
     getUser (unicorn) {
       const userDatas = this.users.filter(user => user.id === unicorn.user_id)
       const user = userDatas[0].email
-
       return user
     },
     removeUnicorn (unicorn) {
@@ -93,7 +116,14 @@ export default {
         .then(response => {
           this.records.splice(this.unicorns.indexOf(unicorn), 1)
         })
-        .catch(error => this.setError(error, 'Cannot delete record'))
+        .catch(error => this.setError(error, 'Cannot delete unicorn'))
+    },
+    addUnicorn (user) {
+      this.$http.secured.post('/api/v1/unicorns/', { unicorn: { sex: 'default', unicorn_type: 'default', color: 'default', user_id: user } })
+        .then(response => {
+          this.unicorns.push(response.data)
+        })
+        .catch(error => this.setError(error, 'Cannot create Unicorn'))
     },
     editUnicorn (unicorn) {
       this.editedUnicorn = unicorn
@@ -101,7 +131,7 @@ export default {
     updateUnicorn (unicorn) {
       this.editedUnicorn = ''
       this.$http.secured.patch(`/api/v1/unicorns/${unicorn.id}`, { unicorn: { sex: unicorn.sex, color: unicorn.color, unicorn_type: unicorn.unicorn_type } })
-        .catch(error => this.setError(error, 'Cannot update record'))
+        .catch(error => this.setError(error, 'Cannot update unicorn'))
     }
 
   }
