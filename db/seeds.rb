@@ -10,8 +10,8 @@ User.create(email: 'yo@gmail.com', admin: true, demand: false, password_digest: 
 user1 = User.create(email: 'john@gmail.com', admin: true, password_digest: BCrypt::Password.create('secret'))
 User.create(email: 'stef@gmail.com', admin: false, demand: true, password_digest: BCrypt::Password.create('secret'))
 user2 = User.create(email: 'lea@gmail.com', admin: false, password_digest: BCrypt::Password.create('secret'))
-User.create(email: 'marie@gmail.com', admin: false, demand: true, password_digest: BCrypt::Password.create('secret'))
+User.create(email: 'marie@gmail.com', admin: false, demand: false, password_digest: BCrypt::Password.create('secret'))
 
-Unicorn.create(sex: 'male', unicorn_type: 'fire', color:'red', user: user1)
+Unicorn.create(name: 'Reptincel', sex: 'male', unicorn_type: 'fire', color:'red', user: user1)
 
-Unicorn.create(sex: 'male', unicorn_type: 'water', color:'blue', user: user2)
+Unicorn.create(name: 'Carapuce', sex: 'male', unicorn_type: 'water', color:'blue', user: user2)

@@ -27,6 +27,7 @@
                     <div class="flex-grow-1 d-flex flex-column justify-content-around align-items-center flex-wrap pr-4">
                       <h5 class="mb-4 font-weight-bold">{{ getUser(unicorn) }}'s Unicorn : </h5>
                       <div class="w-100 d-flex justify-content-around">
+                        <p class="m-0">Name : <span class='font-weight-bolder'>{{ unicorn.name }}</span></p>
                         <p class="m-0">Sex : <span class='font-weight-bolder'>{{ unicorn.sex }}</span></p>
                         <p class="m-0">Type : <span class='font-weight-bolder'>{{ unicorn.unicorn_type }}</span></p>
                         <p class="m-0">Color : <span class='font-weight-bolder'>{{ unicorn.color }}</span></p>
@@ -44,6 +45,11 @@
                   <div v-if="unicorn == editedUnicorn">
                     <form action="" @submit.prevent="updateUnicorn(unicorn)">
                       <div class="mb-5 p-4 bg-white rounded border border-light mt-4">
+
+                        <div class="mb-5 form-group">
+                          <label class="label">Name</label>
+                          <input class="form-control" v-model="unicorn.name" />
+                        </div>
 
                         <div class="mb-5 form-group">
                           <label class="label">Sex</label>
@@ -69,19 +75,33 @@
             </div>
         </div>
         <div class="w-50 mx-auto py-5" v-else>
-          <div class="div" v-if='unicorn.sex == ""'>
+          <div class="div" v-if='unicorn == null'>
             <h1>Don't have a unicorn Yet ? Hask for one !</h1>
             <button class="bg-transparent text-alert tex-decoration-none font-weight-bold py-2 px-4 rounded border border-alert"
-            @click.prevent="removeUnicorn(unicorn)">Ask for a unicorn</button>
+            @click.prevent="askForUnicorn(userId)">Ask for a unicorn</button>
           </div>
-          <div class="div" v-else>
+
+          <div class="div" v-else >
             <h1 class="mb-5">Your Unicorn : </h1>
-            <div class="w-100 d-flex justify-content-around">
+            <div class="w-100 d-flex flex-column align-items-left justify-content-left">
+              <p class="m-0">Name : <span class='font-weight-bolder'>{{ unicorn.name }}</span></p>
+              <button class=" d-inline-block bg-transparent font-weight-lighter text-primary border border-primary tex-decoration-none font-weight-bold py-1 px-2 mr-2 rounded"
+              @click.prevent="editUnicorn(unicorn)">Edit Name</button>
+              <div v-if="unicorn == editedUnicorn">
+                    <form action="" @submit.prevent="updateUnicorn(unicorn)">
+                      <div class="mb-5 p-4 bg-white rounded border border-light mt-4">
+
+                        <div class="mb-5 form-group">
+                          <label class="label">Name</label>
+                          <input class="form-control" v-model="unicorn.name" />
+                        </div>
+                        <input type="submit" value="Update" class="bg-transparent text-primary border border-primary text-decoration-none font-weight-bold py-2 px-4 mr-2 rounded">
+                      </div>
+                    </form>
+                  </div>
               <p class="m-0">Sex : <span class='font-weight-bolder'>{{ unicorn.sex }}</span></p>
               <p class="m-0">Type : <span class='font-weight-bolder'>{{ unicorn.unicorn_type }}</span></p>
               <p class="m-0">Color : <span class='font-weight-bolder'>{{ unicorn.color }}</span></p>
-              <button class="bg-transparent font-weight-lighter text-primary border border-primary tex-decoration-none font-weight-bold py-1 px-2 mr-2 rounded"
-              @click.prevent="editUnicorn(unicorn)">Edit color</button>
             </div>
           </div>
         </div>
@@ -121,10 +141,14 @@ export default {
         .then(response => { this.demands = response.data })
         .catch(error => this.setError(error, 'Something went wrong'))
 
+      this.$http.secured.get('/unicorn')
+        .then(response => { this.unicorn = response.data })
+        .catch(error => this.setError(error, 'Something went wrong'))
+
       this.$http.secured.get('/currentuser')
         .then(response => {
           this.currentUser = response.data.admin
-          this.user_id = response.data.id
+          this.userId = response.data.id
         })
         .catch(error => this.setError(error, 'Cannot find current User'))
     }
@@ -138,11 +162,6 @@ export default {
       const user = userDatas[0].email
       return user
     },
-    getUnicornByUserId (id) {
-      const userId = this.userId
-      const unicorn = this.unicorns.filter(uicorn => unicorn.user_id === userId)
-      this.unicorn = unicorn
-    },
     removeUnicorn (unicorn) {
       this.$http.secured.delete(`/api/v1/unicorns/${unicorn.id}`)
         .then(response => {
@@ -151,7 +170,7 @@ export default {
         .catch(error => this.setError(error, 'Cannot delete unicorn'))
     },
     addUnicorn (user) {
-      this.$http.secured.post('/api/v1/unicorns/', { unicorn: { sex: 'default', unicorn_type: 'default', color: 'default', user_id: user } })
+      this.$http.secured.post('/api/v1/unicorns/', { unicorn: { name: 'default', sex: 'default', unicorn_type: 'default', color: 'default', user_id: user } })
         .then(response => {
           this.unicorns.push(response.data)
         })
@@ -162,8 +181,12 @@ export default {
     },
     updateUnicorn (unicorn) {
       this.editedUnicorn = ''
-      this.$http.secured.patch(`/api/v1/unicorns/${unicorn.id}`, { unicorn: { sex: unicorn.sex, color: unicorn.color, unicorn_type: unicorn.unicorn_type } })
+      this.$http.secured.patch(`/api/v1/unicorns/${unicorn.id}`, { unicorn: { name: unicorn.name, sex: unicorn.sex, color: unicorn.color, unicorn_type: unicorn.unicorn_type } })
         .catch(error => this.setError(error, 'Cannot update unicorn'))
+    },
+    askForUnicorn (userId) {
+      this.$http.secured.patch(`/users/${userId}`, { user: { demand: 'true' } })
+        .catch(error => this.setError(error, 'Cannot validate your demand'))
     }
   }
 }

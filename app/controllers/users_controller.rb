@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_action :authorize_access_request!
-  before_action :set_user, only: :show
+  before_action :set_user, only: [:show, :update]
   def index
     @users = User.all
 
@@ -15,6 +15,16 @@ class UsersController < ApplicationController
     @demands = User.where(demand: true)
 
     render json: @demands
+  end
+
+  def unicorn
+    @unicorn = current_user.unicorn
+
+    render json: @unicorn
+  end
+
+  def update
+    @user.update(demand: true)
   end
 
   def current
