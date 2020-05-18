@@ -13,14 +13,13 @@ go in nextie-backend folder and run :
 `bundle install`
 after that run :
 `rails db:create db:migrate db:seed`
-`bundle install`
 
 then go in nextie-backend/nextie-frontend folder and run :
 `yarn install`
 
 ## Launch server
-run command rails s
-run command yarn dev 
+run command `rails s`
+run command `yarn dev` 
 
 and visit the app on url : http://localhost:8080
 
