@@ -8,7 +8,6 @@
         <router-link to="/" class="text-muted px-2 text-decoration-none" v-if="!signedIn()">Sign in</router-link>
         <router-link to="/signup" class="text-muted px-2 text-decoration-none" v-if="!signedIn()">Sign Up</router-link>
         <router-link to="/home" class="text-muted px-2 text-decoration-none" v-if="signedIn()">Home</router-link>
-        <router-link to="/unicorn" class="text-muted px-2 text-decoration-none" v-if="signedIn()">My unicorn</router-link>
         <a href="#" @click.prevent="signOut" class="text-muted px-2 text-decoration-none" v-if="signedIn()">Sign out</a>
       </div>
     </div>
