@@ -10,12 +10,13 @@ An app to mange happiness of the team unicorns !
 
 ## Install
 go in nextie-backend folder and run :
-Run bundle install
-then go in nextie-backend/nextie-frontend folder and run :
-yarn install
+`bundle install`
+after that run :
+`rails db:create db:migrate db:seed`
+`bundle install`
 
-run rails db:migrate
-run rails db:seed
+then go in nextie-backend/nextie-frontend folder and run :
+`yarn install`
 
 ## Launch server
 run command rails s
