@@ -10,15 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_18_071823) do
+ActiveRecord::Schema.define(version: 2020_05_18_091249) do
 
   create_table "unicorns", force: :cascade do |t|
     t.string "sex"
-    t.string "type"
     t.string "color"
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "unicorn_type"
     t.index ["user_id"], name: "index_unicorns_on_user_id"
   end
 
