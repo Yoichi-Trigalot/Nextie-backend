@@ -1,7 +1,10 @@
 <template>
     <div class="div">
         <div class="container">
-            <h1>Welcome new user in nextie</h1>
+            <div v-if='isadmin'>
+                <h1>Welcome new user in nextie</h1>
+
+            </div>
         </div>
     </div>
 </template>
@@ -11,8 +14,8 @@ export default {
   name: 'Home',
   data () {
     return {
-        msg: 'Welcome your login'
-        }
+      msg: 'Welcome your login'
     }
+  }
 }
 </script>
