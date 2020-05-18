@@ -1,6 +1,6 @@
 <template>
     <div class="div">
-        <div class="w-50 mx-auto py-5">
+        <div class="w-50 mx-auto py-5" v-if='admin == currentUser'>
             <div>
               <h1>On demand Unicorns</h1>
                 <ul class="list-unstyled mt-4">
@@ -18,7 +18,6 @@
                     </div>
                   </li>
                 </ul>
-
             </div>
             <div>
               <h1>List of unicorns </h1>
@@ -69,6 +68,23 @@
               </ul>
             </div>
         </div>
+        <div class="w-50 mx-auto py-5" v-else>
+          <div class="div" v-if='unicorn.sex == ""'>
+            <h1>Don't have a unicorn Yet ? Hask for one !</h1>
+            <button class="bg-transparent text-alert tex-decoration-none font-weight-bold py-2 px-4 rounded border border-alert"
+            @click.prevent="removeUnicorn(unicorn)">Ask for a unicorn</button>
+          </div>
+          <div class="div" v-else>
+            <h1 class="mb-5">Your Unicorn : </h1>
+            <div class="w-100 d-flex justify-content-around">
+              <p class="m-0">Sex : <span class='font-weight-bolder'>{{ unicorn.sex }}</span></p>
+              <p class="m-0">Type : <span class='font-weight-bolder'>{{ unicorn.unicorn_type }}</span></p>
+              <p class="m-0">Color : <span class='font-weight-bolder'>{{ unicorn.color }}</span></p>
+              <button class="bg-transparent font-weight-lighter text-primary border border-primary tex-decoration-none font-weight-bold py-1 px-2 mr-2 rounded"
+              @click.prevent="editUnicorn(unicorn)">Edit color</button>
+            </div>
+          </div>
+        </div>
     </div>
 </template>
 
@@ -78,7 +94,11 @@ export default {
   data () {
     return {
       unicorns: [],
+      unicorn: [],
       users: [],
+      admin: 'true',
+      userId: '',
+      currentUser: '',
       demands: [],
       newUnicorn: [],
       error: '',
@@ -100,6 +120,13 @@ export default {
       this.$http.secured.get('/demands')
         .then(response => { this.demands = response.data })
         .catch(error => this.setError(error, 'Something went wrong'))
+
+      this.$http.secured.get('/currentuser')
+        .then(response => {
+          this.currentUser = response.data.admin
+          this.user_id = response.data.id
+        })
+        .catch(error => this.setError(error, 'Cannot find current User'))
     }
   },
   methods: {
@@ -110,6 +137,11 @@ export default {
       const userDatas = this.users.filter(user => user.id === unicorn.user_id)
       const user = userDatas[0].email
       return user
+    },
+    getUnicornByUserId (id) {
+      const userId = this.userId
+      const unicorn = this.unicorns.filter(uicorn => unicorn.user_id === userId)
+      this.unicorn = unicorn
     },
     removeUnicorn (unicorn) {
       this.$http.secured.delete(`/api/v1/unicorns/${unicorn.id}`)
@@ -133,7 +165,6 @@ export default {
       this.$http.secured.patch(`/api/v1/unicorns/${unicorn.id}`, { unicorn: { sex: unicorn.sex, color: unicorn.color, unicorn_type: unicorn.unicorn_type } })
         .catch(error => this.setError(error, 'Cannot update unicorn'))
     }
-
   }
 }
 </script>

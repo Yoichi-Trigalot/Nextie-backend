@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  before_action :authorize_access_request!
   before_action :set_user, only: :show
   def index
     @users = User.all
@@ -18,8 +19,13 @@ class UsersController < ApplicationController
 
   def current
     @user = current_user
-
-    render json: @user
+    if @user.admin
+      outpout = { admin: 'true', id: current_user.id }.to_json
+      render json: outpout
+    else
+      outpout = { admin: 'false', id: current_user.id }.to_json
+      render json: outpout
+    end
   end
 
   private

@@ -51,7 +51,7 @@ module Api
 
       # Only allow a trusted parameter "white list" through.
       def unicorn_params
-      params.require(:unicorn).permit(:sex, :type, :color, :user_id, :unicorn_type)
+      params.require(:unicorn).permit(:name, :sex, :type, :color, :user_id, :unicorn_type)
       end
       end
   end
